@@ -28,7 +28,7 @@ class CardMetadata:
         return [self.quantity, self.name, self.is_foil, self.set_name]
 
 
-TCGPLAYER_REGEX = r"(\d+) (.*) \[(.*)\]"
+DECKLIST_REGEX = r"(\d+) (.*) [\[\(](.*)[\]\)]"
 
 if __name__ == "__main__":
     cards = []
@@ -37,9 +37,9 @@ if __name__ == "__main__":
     # 4 Polluted Delta [ONS]
     with open("input.txt", "r") as f:
         while line := f.readline():
-            fields = re.match(TCGPLAYER_REGEX, line.strip())
-            quantity, name, code = fields.groups()
-            cards.append(CardMetadata(quantity=quantity, name=name, set_code=code))
+            if (fields := re.match(DECKLIST_REGEX, line.strip())) is not None:
+                quantity, name, code = fields.groups()
+                cards.append(CardMetadata(quantity=quantity, name=name, set_code=code))
 
     with open("output.csv", "w", newline="") as f:
         w = csv.writer(f)
