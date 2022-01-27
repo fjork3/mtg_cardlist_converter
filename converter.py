@@ -25,7 +25,7 @@ class CardMetadata:
         self.set_name = set_code_to_name(self.set_code)
 
     def cardkingdom_csv_data(self) -> List:
-        return [self.quantity, self.name, self.is_foil, self.set_name]
+        return [self.name, self.set_name, int(self.is_foil), self.quantity]
 
 
 DECKLIST_REGEX = r"(\d+) (.*) [\[\(](.*)[\]\)]"
