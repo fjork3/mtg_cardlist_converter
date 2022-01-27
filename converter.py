@@ -28,20 +28,29 @@ class CardMetadata:
         return [self.name, self.set_name, int(self.is_foil), self.quantity]
 
 
+# Matches these formats:
+# 1 Llanowar Elves (DOM)
+# 1 Llanowar Elves [DOM]
 DECKLIST_REGEX = r"(\d+) (.*) [\[\(](.*)[\]\)]"
+# TODO: function for decklist line matching, with more fallback regexes for other formats
 
-if __name__ == "__main__":
+def read_decklist(input_file: str) -> List[CardMetadata]:
     cards = []
-
-    # For now, expect TCGplayer collection output format:
-    # 4 Polluted Delta [ONS]
-    with open("input.txt", "r") as f:
+    with open(input_file, "r") as f:
         while line := f.readline():
             if (fields := re.match(DECKLIST_REGEX, line.strip())) is not None:
                 quantity, name, code = fields.groups()
                 cards.append(CardMetadata(quantity=quantity, name=name, set_code=code))
+    return cards
 
-    with open("output.csv", "w", newline="") as f:
+
+def write_cardkingdom_csv(output_file: str, cards: List[CardMetadata]):
+    with open(output_file, "w", newline="") as f:
         w = csv.writer(f)
         for card in cards:
             w.writerow(card.cardkingdom_csv_data())
+
+
+if __name__ == "__main__":
+    cards = read_decklist(input_file="input.txt")
+    write_cardkingdom_csv(output_file="output.csv", cards=cards)
