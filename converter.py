@@ -1,14 +1,22 @@
 import csv
-from typing import List
+import json
+import os.path
+from typing import List, Dict
 import requests
 import re
 
-sets_req = requests.get("https://api.scryfall.com/sets")
-sets_req.raise_for_status()
 
-# Lookup from set code to Scryfall set objects:
-# https://scryfall.com/docs/api/sets
-sets = {x["code"].upper(): x for x in sets_req.json()["data"]}
+# Load local set data if available, falling back to Scryfall API
+def load_sets() -> Dict:
+    if os.path.exists("scryfall_sets.json"):
+        with open("scryfall_sets.json", "r") as f:
+            set_json = json.load(f)
+            return {x["code"].upper(): x for x in set_json["data"]}
+
+    # Scryfall API docs: https://scryfall.com/docs/api/sets
+    sets_req = requests.get("https://api.scryfall.com/sets")
+    sets_req.raise_for_status()
+    return {x["code"].upper(): x for x in sets_req.json()["data"]}
 
 
 def set_code_to_name(code: str) -> str:
@@ -52,5 +60,6 @@ def write_cardkingdom_csv(output_file: str, cards: List[CardMetadata]):
 
 
 if __name__ == "__main__":
+    sets = load_sets()
     cards = read_decklist(input_file="input.txt")
     write_cardkingdom_csv(output_file="output.csv", cards=cards)

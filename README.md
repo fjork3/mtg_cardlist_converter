@@ -4,10 +4,12 @@ Move your decklists between different providers' formats.
 
 ## Usage
 
-- Run `converter.py` with a file called `input.txt` in the same directory, in decklist format:
-- `1 Llanowar Elves (DOM)` or `1 Llanowar Elves [DOM]`
+- Download `converter.py` and `scryfall_sets.json` (either from this repo or from https://api.scryfall.com/sets) to the same directory.
+- Add `input.txt` in the same directory, in decklist format:
+  - `1 Llanowar Elves (DOM)` or `1 Llanowar Elves [DOM]`
+- Run `converter.py`.
 - output CSV will be writen to `output.csv`, in CardKingdom import format:
-- `Llanowar Elves,Dominaria,0,1`
+  - `Llanowar Elves,Dominaria,0,1`
 
 ## Known issues / future improvements
 
